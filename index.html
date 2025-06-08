@@ -3,7 +3,270 @@
 <head>
   <meta charset="utf-8">
   <title>NDS Business Login Form</title>
-  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Global styles with animations */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Montserrat', sans-serif;
+      height: 100vh;
+      overflow: hidden;
+      background: linear-gradient(135deg, #CB9DF0, #F0C1E1, #FDDBBB, #FFF9BF);
+      animation: gradientShift 15s ease infinite;
+      background-size: 400% 400%;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Video background styles */
+    #myVideo {
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      min-width: 100%;
+      min-height: 100%;
+      z-index: -500;
+      opacity: 0.3;
+      transition: opacity 1.5s ease;
+    }
+
+    #myVideo:hover {
+      opacity: 0.5;
+    }
+
+    /* Login form container */
+    .center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 400px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      animation: fadeIn 1s ease-out;
+    }
+
+    .center:hover {
+      transform: translate(-50%, -50%) scale(1.02);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translate(-50%, -45%); }
+      to { opacity: 1; transform: translate(-50%, -50%); }
+    }
+
+    .center h1 {
+      text-align: center;
+      padding: 25px 0;
+      margin: 0;
+      color: #7B4CB8;
+      font-size: 28px;
+      font-weight: 700;
+      position: relative;
+      animation: textGlow 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes textGlow {
+      from { text-shadow: 0 0 5px rgba(203, 157, 240, 0.5); }
+      to { text-shadow: 0 0 15px rgba(203, 157, 240, 0.8); }
+    }
+
+    .center h1::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 3px;
+      background: linear-gradient(90deg, #CB9DF0, #F0C1E1);
+      border-radius: 3px;
+      transition: all 0.5s ease;
+    }
+
+    .center:hover h1::after {
+      width: 120px;
+      background: linear-gradient(90deg, #F0C1E1, #FDDBBB);
+    }
+
+    .center form {
+      padding: 0 40px;
+      box-sizing: border-box;
+    }
+
+    /* Input fields */
+    form .txt_field {
+      position: relative;
+      margin: 30px 0;
+      border-radius: 5px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .txt_field::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, #CB9DF0, #F0C1E1);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.5s ease;
+    }
+
+    .txt_field:hover::before {
+      transform: scaleX(1);
+    }
+
+    .txt_field input {
+      width: 100%;
+      padding: 0 10px;
+      height: 50px;
+      font-size: 16px;
+      border: none;
+      background: rgba(255, 255, 255, 0.7);
+      outline: none;
+      border-radius: 5px;
+      transition: all 0.3s ease;
+    }
+
+    .txt_field input:focus {
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 5px 15px rgba(203, 157, 240, 0.2);
+    }
+
+    .txt_field label {
+      position: absolute;
+      top: 50%;
+      left: 15px;
+      color: #999;
+      transform: translateY(-50%);
+      font-size: 16px;
+      pointer-events: none;
+      transition: all 0.3s ease;
+    }
+
+    .txt_field input:focus ~ label,
+    .txt_field input:valid ~ label {
+      top: -10px;
+      left: 10px;
+      font-size: 12px;
+      color: #7B4CB8;
+      background: white;
+      padding: 0 5px;
+      border-radius: 3px;
+    }
+
+    /* Password toggle */
+    .toggle-password {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      width: 24px;
+      height: 24px;
+      background-size: cover;
+      transition: all 0.3s ease;
+      opacity: 0.6;
+    }
+
+    .toggle-password:hover {
+      opacity: 1;
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    /* Links */
+    .pass, .signup_link, .need_help_link {
+      margin: 15px 0;
+      text-align: center;
+      font-size: 14px;
+      color: #666;
+      transition: all 0.3s ease;
+    }
+
+    .pass a, .signup_link a, .need_help_link a {
+      color: #7B4CB8;
+      text-decoration: none;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .pass a:hover, .signup_link a:hover, .need_help_link a:hover {
+      color: #CB9DF0;
+    }
+
+    .pass a::after, .signup_link a::after, .need_help_link a::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: #CB9DF0;
+      transition: width 0.3s ease;
+    }
+
+    .pass a:hover::after, .signup_link a:hover::after, .need_help_link a:hover::after {
+      width: 100%;
+    }
+
+    /* Submit button */
+    input[type="submit"] {
+      width: 100%;
+      height: 50px;
+      border: none;
+      background: linear-gradient(90deg, #CB9DF0, #F0C1E1);
+      border-radius: 25px;
+      font-size: 18px;
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      outline: none;
+      margin: 20px 0;
+      transition: all 0.4s ease;
+      box-shadow: 0 5px 15px rgba(203, 157, 240, 0.4);
+    }
+
+    input[type="submit"]:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(203, 157, 240, 0.6);
+      background: linear-gradient(90deg, #F0C1E1, #FDDBBB);
+    }
+
+    input[type="submit"]:active {
+      transform: translateY(0);
+      box-shadow: 0 5px 15px rgba(203, 157, 240, 0.4);
+    }
+
+    /* Floating animation for form */
+    @keyframes float {
+      0% { transform: translate(-50%, -50%) translateY(0px); }
+      50% { transform: translate(-50%, -50%) translateY(-10px); }
+      100% { transform: translate(-50%, -50%) translateY(0px); }
+    }
+
+    .center {
+      animation: float 6s ease-in-out infinite;
+    }
+
+    /* Responsive design */
+    @media (max-width: 500px) {
+      .center {
+        width: 90%;
+      }
+    }
+  </style>
 </head>
 <body>
   <video autoplay loop muted poster="" id="myVideo">
@@ -15,7 +278,6 @@
     <form method="post" id="loginForm">
       <div class="txt_field">
         <input type="text" name="username" required>
-        <span></span>
         <label>Username</label>
       </div>
       <div class="txt_field">
@@ -35,6 +297,111 @@
       </div>
     </form>
   </div>
-  <script src="main.js"></script>
+
+  <script>
+    // Define the allowed password codes
+    const allowedPasswords = [
+      "NDSL-84627", "NDSL-51293", "NDSL-39274", "NDSL-72964", "NDSL-61738",
+      "NDSL-93827", "NDSL-17346", "NDSL-62415", "NDSL-94573", "NDSL-36254",
+      "NDSL-48126", "NDSL-53978", "NDSL-82647", "NDSL-27915", "NDSL-75312",
+      "NDSL-31468", "NDSL-64729", "NDSL-98514", "NDSL-16293", "NDSL-82936",
+      "NDSL-37469", "NDSL-52637", "NDSL-69482", "NDSL-28364", "NDSL-71948",
+      "NDSL-63124", "NDSL-48592", "NDSL-96714", "NDSL-31285", "NDSL-59873",
+      "NDSL-75349", "NDSL-42681", "NDSL-14827", "NDSL-82754", "NDSL-59376",
+      "NDSL-36491", "NDSL-94128", "NDSL-68125", "NDSL-53947", "NDSL-47635",
+      "NDSL-19384", "NDSL-87426", "NDSL-25678", "NDSL-68273", "NDSL-39467",
+      "NDSL-84219", "NDSL-71954", "NDSL-52748", "NDSL-36594", "NDSL-94627",
+      "NDSL-28761", "NDSL-45136", "NDSL-79423", "NDSL-63857", "NDSL-57249",
+      "NDSL-31964", "NDSL-76342", "NDSL-61879", "NDSL-84172", "NDSL-94638",
+      "NDSL-36518", "NDSL-82394", "NDSL-48756", "NDSL-62973", "NDSL-15384",
+      "NDSL-96475", "NDSL-42867", "NDSL-75931", "NDSL-29486", "NDSL-18732",
+      "NDSL-67492", "NDSL-36158", "NDSL-59427", "NDSL-84679", "NDSL-93514",
+      "NDSL-27864", "NDSL-54712", "NDSL-81629", "NDSL-42376", "NDSL-75894",
+      "NDSL-69247", "NDSL-28461", "NDSL-91853", "NDSL-74612", "NDSL-36429",
+      "NDSL-58291", "NDSL-12984", "NDSL-47568", "NDSL-63972", "NDSL-72134",
+      "NDSL-31946", "NDSL-87416", "NDSL-57123", "NDSL-49618", "NDSL-63429",
+      "NDSL-84175", "NDSL-78312", "NDSL-65284", "NDSL-41879", "NDSL-72651"
+    ];
+
+    // Function to validate the password
+    function validatePassword(password) {
+      return allowedPasswords.includes(password);
+    }
+
+    // Function to handle form submission
+    const form = document.getElementById('loginForm');
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault(); // Prevent form submission from refreshing the page
+
+      // Get form input values
+      const username = document.querySelector('input[name="username"]').value;
+      const password = document.querySelector('input[name="password"]').value;
+
+      // Add animation to form during validation
+      form.style.transform = 'scale(0.98)';
+      setTimeout(() => {
+        form.style.transform = 'scale(1)';
+      }, 200);
+
+      // Validate the password
+      if (validatePassword(password)) {
+        // Add success animation
+        document.querySelector('.center').style.animation = 'none';
+        document.querySelector('.center').style.transform = 'translate(-50%, -50%) scale(1.05)';
+        document.querySelector('.center').style.boxShadow = '0 25px 50px rgba(203, 157, 240, 0.5)';
+        
+        // Redirect after animation
+        setTimeout(() => {
+          const redirectURL = 'https://nilam-direct-services-info.framer.ai/';
+          window.location.href = redirectURL;
+        }, 500);
+      } else {
+        // Add error animation
+        document.querySelector('.center').style.animation = 'shake 0.5s';
+        setTimeout(() => {
+          document.querySelector('.center').style.animation = 'float 6s ease-in-out infinite';
+        }, 500);
+        
+        // Display error message
+        alert('Invalid password. Please enter a valid password code.');
+      }
+    });
+
+    // Add shake animation for errors
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes shake {
+        0%, 100% { transform: translate(-50%, -50%) translateX(0); }
+        10%, 30%, 50%, 70%, 90% { transform: translate(-50%, -50%) translateX(-10px); }
+        20%, 40%, 60%, 80% { transform: translate(-50%, -50%) translateX(10px); }
+      }
+    `;
+    document.head.appendChild(style);
+
+    // Password toggle function
+    let passwordVisible = false;
+
+    function togglePasswordVisibility() {
+      const passwordField = document.getElementById('passwordField');
+      const eyeIcon = document.getElementById('eyeIcon');
+
+      // Add click animation
+      eyeIcon.style.transform = 'translateY(-50%) scale(0.8)';
+      setTimeout(() => {
+        eyeIcon.style.transform = 'translateY(-50%) scale(1)';
+      }, 200);
+
+      if (passwordVisible) {
+        passwordField.type = 'password';
+        eyeIcon.style.backgroundImage = 'url("eye.png")';
+      } else {
+        passwordField.type = 'text';
+        eyeIcon.style.backgroundImage = 'url("eye-slash.png")';
+      }
+
+      passwordVisible = !passwordVisible;
+    }
+  </script>
 </body>
 </html>
